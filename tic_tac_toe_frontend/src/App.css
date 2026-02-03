@@ -1,104 +1,292 @@
-/* CSS Variables for Theme Management */
+/* Retro Tic Tac Toe theme (plain CSS only) */
 :root {
-  /* Light theme colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
-}
+  --bg: #0b1020;
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-2: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.16);
 
-[data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
+  --text: #e9f2ff;
+  --muted: rgba(233, 242, 255, 0.75);
+
+  --accent: #3b82f6; /* blue */
+  --accent-2: #06b6d4; /* cyan */
+  --danger: #ef4444;
+
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+  --radius: 18px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  --sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", "Liberation Sans", sans-serif;
 }
 
 .App {
-  text-align: center;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 900px at 20% 10%, rgba(6, 182, 212, 0.14), transparent 65%),
+    radial-gradient(1000px 700px at 85% 35%, rgba(59, 130, 246, 0.16), transparent 60%),
+    linear-gradient(180deg, #070a14 0%, var(--bg) 55%, #060815 100%);
 }
 
-.App-logo {
-  height: 40vmin;
+.App-main {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 16px 48px;
+}
+
+/* ===== Tic Tac Toe layout ===== */
+.ttt {
+  width: min(720px, 100%);
+  background: linear-gradient(180deg, var(--surface) 0%, rgba(255, 255, 255, 0.03) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ttt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.06) 0px,
+      rgba(255, 255, 255, 0.06) 1px,
+      transparent 2px,
+      transparent 6px
+    );
+  opacity: 0.12;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.ttt-header {
+  position: relative;
+  text-align: center;
+  padding: 8px 8px 10px;
 }
 
-.App-header {
-  background-color: var(--bg-secondary);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease;
+.ttt-marquee {
+  font-family: var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: rgba(233, 242, 255, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.18);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+.ttt-title {
+  font-family: var(--mono);
+  font-size: 34px;
+  margin: 0 0 8px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ttt-subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.ttt-status {
+  margin: 14px auto 16px;
+  width: min(520px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+  border-radius: 14px;
+  padding: 10px 12px;
+  text-align: center;
   position: relative;
 }
 
-.App-link {
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
+.ttt-statusLabel {
+  font-family: var(--mono);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.theme-toggle {
+.ttt-status.is-winner {
+  border-color: rgba(6, 182, 212, 0.6);
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.12);
+}
+
+.ttt-status.is-draw {
+  border-color: rgba(59, 130, 246, 0.55);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+.ttt-boardWrap {
+  display: grid;
+  place-items: center;
+  padding: 10px 0 12px;
+  position: relative;
+}
+
+.ttt-board {
+  width: min(420px, 100%);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.ttt-cell {
+  border-radius: 14px;
+  position: relative;
+}
+
+.ttt-cell.is-winning::after {
+  content: "";
   position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
+  inset: -3px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, rgba(6, 182, 212, 0.5), rgba(59, 130, 246, 0.5));
+  filter: blur(10px);
+  opacity: 0.65;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ttt-square {
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(180deg, var(--surface-2), rgba(255, 255, 255, 0.04));
+  color: var(--text);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  display: grid;
+  place-items: center;
+  position: relative;
+  z-index: 1;
+
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease,
+    box-shadow 140ms ease, opacity 140ms ease;
 }
 
-.theme-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
+.ttt-square:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.34);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
 }
 
-.theme-toggle:active {
-  transform: translateY(0);
+.ttt-square:active {
+  transform: translateY(0px);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.ttt-square:disabled {
+  cursor: not-allowed;
+  opacity: 0.92;
+}
+
+.ttt-squareText {
+  font-family: var(--mono);
+  font-weight: 800;
+  font-size: clamp(42px, 10vw, 76px);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+  transform: translateY(2px);
+  text-shadow: 0 10px 25px rgba(0, 0, 0, 0.55);
+}
+
+.ttt-square.is-x .ttt-squareText {
+  color: #e9f2ff;
+  background: linear-gradient(90deg, rgba(233, 242, 255, 0.95), rgba(6, 182, 212, 0.95));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ttt-square.is-o .ttt-squareText {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.98), rgba(6, 182, 212, 0.98));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ttt-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 6px 0 2px;
+  position: relative;
+}
+
+.ttt-btn {
+  font-family: var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.25), rgba(6, 182, 212, 0.25));
+  color: var(--text);
+
+  border-radius: 14px;
+  padding: 12px 16px;
+  cursor: pointer;
+
+  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease,
+    opacity 140ms ease;
+}
+
+.ttt-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.36);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.32);
+}
+
+.ttt-btn:active {
+  transform: translateY(0px);
+}
+
+.ttt-footer {
+  text-align: center;
+  margin-top: 10px;
+  position: relative;
+}
+
+.ttt-hint {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Responsive tweaks */
+@media (max-width: 520px) {
+  .ttt {
+    padding: 18px 14px 16px;
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
+  .ttt-title {
+    font-size: 28px;
+  }
+
+  .ttt-board {
+    gap: 10px;
+    padding: 10px;
   }
 }
